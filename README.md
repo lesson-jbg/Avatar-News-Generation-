@@ -295,6 +295,7 @@ Watch the platform in action: [Demo Video](https://drive.google.com/file/d/1AfGd
 **Developed by:**
 - 👩‍💻 **Sama Shalabi**
 - 👩‍💻 **Bissan Dwekat**
+- 👩‍💻 **Rama Sabboubeh**
 
 ### Contributions:
 - 🧠 n8n workflow design and integration
