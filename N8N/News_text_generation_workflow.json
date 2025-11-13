@@ -1,0 +1,258 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "news-editor",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1008,
+        16
+      ],
+      "id": "ce4c55f5-3cd8-4d41-9f5f-26ed33d40817",
+      "name": "Webhook",
+      "webhookId": "dfaedc71-984d-46dc-ba14-29d8ca2ec65f"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.policy }}",
+                    "rightValue": "najah_media",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2237ee6a-f573-42ae-8578-8cc3dc365178"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dbe7792d-3a4f-4ff8-b55a-4c8314d990df",
+                    "leftValue": "={{ $json.body.policy }}",
+                    "rightValue": "gaza_tv",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "11a382f6-8aa1-487f-972a-5275827ee0d6",
+                    "leftValue": "={{ $json.body.policy }}",
+                    "rightValue": "najah_news",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "allMatchingOutputs": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -784,
+        0
+      ],
+      "id": "9a4ba208-462e-47a9-9f3d-5d3d5bd351a4",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.prompt }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -336,
+        16
+      ],
+      "id": "c3fc12dd-d310-4970-9385-253b3b68f3b4",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -264,
+        240
+      ],
+      "id": "d6d9f073-3890-4bfb-b8d4-15bd9a48896b",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "9WmDroEj3EWc7Hrk",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n\"text\" :{{ $json.text.toJsonString() }}\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        16,
+        16
+      ],
+      "id": "8deec9e2-1d31-459b-87d6-495f279f2b80",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "python",
+        "pythonCode": "prompts = [f\"\"\"أنت محرر يعمل في مركز الإعلام – جامعة النجاح الوطنية، وتلتزم بالسياسة التحريرية الخاصة بـ Najah Media.\nالمطلوب: إعادة صياغة النص المُدخل بأسلوب عربي فصيح، مهني، موضوعي، تحليلي وهادئ، مع الالتزام بالتعليمات التالية:\n\nالنص :  {_input.item.json.body.text}\nقواعد الكتابة :\n\nاستخدم العربية الفصحى الدقيقة والواضحة.\n\nالتزم بالحياد والموضوعية، واذكر جميع وجهات النظر بإنصاف.\n\nتجنّب المبالغة والصفات الانفعالية أو العاطفية.\n\nقدّم تحليلًا وسياقًا منطقيًا للأحداث دون تهويل.\n\nاجعل الخاتمة فكرية أو تحليلية هادئة.\n\nهيكل النص الإلزامي (بالعربية وبهذا الترتيب):\nالتصنيف: [المجال العام والفرعي للخبر، مثل: سياسي – محلي / اقتصادي – تنمية]\nالعنوان: [عنوان صحفي دقيق يلخص جوهر الحدث]\nالمقدمة: [فقرتان تمهيديتان تقدمان خلفية الحدث وفكرته الرئيسية]\nالتفاصيل: [ثلاث إلى أربع فقرات تسرد الوقائع بشكل متسلسل وتحليلي]\nالخاتمة: [فقرة قصيرة تتضمن خلاصة فكرية أو تحليلية هادئة]\n\nأخرج الناتج كنص عربي منسق وواضح بدون أي علامات أو رموز أو ترميز (HTML أو Markdown).\nيجب أن تبدأ الأسطر بالعناوين أعلاه (التصنيف، العنوان، المقدمة، التفاصيل، الخاتمة) بنفس الترتيب، ويتبع كل منها الفقرة الخاصة به.\"\"\"\n  \n  ,\n  \n  f\"\"\"أنت محرر يعمل وفق السياسة التحريرية لإذاعة وتلفزيون غزة، وتكتب نصًا وطنيًا وإنسانيًا يعكس روح الصمود الفلسطيني.\nالمطلوب: إعادة صياغة النص بأسلوب وطني، إنساني، متوازن، يعبر عن الهوية الفلسطينية، مع الالتزام بالتعليمات التالية:\n\nالنص :  {_input.item.json.body.text}\n\nقواعد الكتابة:\n\nاستخدم مصطلحات وطنية إلزامية مثل: الاحتلال الإسرائيلي، الأسرى، الشهداء، المقاومة الفلسطينية، القدس المحتلة.\n\nأبرز الجانب الإنساني في القصة: المعاناة، الكرامة، الأمل، الصمود.\n\nلا تستخدم مصطلحات الاحتلال مثل: \"الجيش الإسرائيلي\" أو \"قتيل\".\n\nاستخدم لغة فصيحة قريبة من الناس دون تهويل أو مبالغة.\n\nاجعل النص مؤثرًا ومتوازنًا، يعبر عن الكرامة والثبات الفلسطيني.\n\nهيكل النص الإلزامي (بهذا الترتيب):\nالتصنيف: [نوع الخبر، مثل: وطني – إنساني / سياسي – ميداني]\nالعنوان: [عنوان وطني وإنساني يعكس جوهر الحدث وروحه العامة]\nالمقدمة: [فقرتان تمهيديتان تبرزان البعد الوطني والإنساني للحدث]\nالتفاصيل: [ثلاث إلى أربع فقرات تصف الحدث، المعاناة، والصمود الفلسطيني]\nالخاتمة: [فقرة تلخص الموقف الوطني وتؤكد الثبات والأمل]\n\nأخرج الناتج كنص عربي منسق وواضح بدون أي ترميز أو تنسيق إضافي.\nاستخدم نفس العناوين بالعربية تمامًا (التصنيف، العنوان، المقدمة، التفاصيل، الخاتمة) وبالترتيب\"\"\"\n           \n           ,\n          \n          f\"\"\"أنت محرر يعمل في موقع النجاح الإخباري، وتلتزم بالسياسة التحريرية الخاصة بـ Najah News.\nالمطلوب: إعادة صياغة النص بأسلوب صحفي مهني مباشر وواضح، مع التركيز على التسلسل الزمني والدقة، وفق القواعد التالية:\n\nالنص :  {_input.item.json.body.text}\n\nقواعد الكتابة:\n\nاستخدم زمنًا خبريًا مناسبًا (المضارع أو الماضي القريب).\n\nاجعل العنوان قصيرًا ودقيقًا (10–12 كلمة كحد أقصى).\n\nاستخدم الفعل المعلوم وليس المجهول.\n\nالتزم بالمصطلحات الوطنية مثل: الاحتلال الإسرائيلي، الشهداء، الأسرى، القدس المحتلة.\n\nرتّب الفقرات زمنيًا من الأحدث إلى الأقدم.\n\nهيكل النص الإلزامي (بهذا الترتيب):\nالتصنيف: [نوع الخبر، مثل: سياسي – محلي / دولي – عاجل]\nالعنوان: [عنوان خبري مباشر وواضح يلخص الحدث الأساسي]\nالمقدمة: [فقرة قصيرة تضع القارئ في جو الحدث الرئيسي]\nالتفاصيل: [ثلاث إلى أربع فقرات تشرح الوقائع بدقة وتسلسل زمني]\nالخاتمة: [فقرة تلخص الموقف النهائي أو النتيجة]\n\nأخرج الناتج كنص عربي فصيح وواضح بدون رموز أو وسوم.\nاستخدم نفس العناوين بالعربية (التصنيف، العنوان، المقدمة، التفاصيل، الخاتمة) بالترتيب، يتبع كل عنوان فقرته.\"\"\" \n          ]\n\nif _input.first().json.body.policy == \"najah_media\":\n  return { \"prompt\" : prompts[0] }\nelif _input.first().json.body.policy == \"gaza_tv\":\n  return { \"prompt\" : prompts[1] }\nelif _input.first().json.body.policy == \"najah_news\":\n  return { \"prompt\" : prompts[2] }\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        16
+      ],
+      "id": "aae3cf3d-f0ac-475b-8a2a-a5794116494a",
+      "name": "prompt generation"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "prompt generation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "prompt generation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "prompt generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prompt generation": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cfe5d474-d5e1-484f-aa54-81519baafee7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4a35b29b77035ba309cb35acd078e3dded27cf4798e7e5f5bf6e55005a9de256"
+  },
+  "id": "sDNx78InBXGOTldH",
+  "tags": []
+}

@@ -1,0 +1,983 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "uploadeverthing",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "7407a286-23bf-4773-88a2-f1d9e3cbff09",
+      "name": "Webhook Upload sources",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        304,
+        -624
+      ],
+      "webhookId": "56c0f957-0e39-459a-990a-a0c4841a79ac"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=video",
+        "name": "=video.mp3{{ \"video_\" + $now.toFormat(\"yyyyLLdd_HHmmss\") + \".mp4\" }}\n",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {
+          "simplifyOutput": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        864,
+        -720
+      ],
+      "id": "93d9f3a6-7a3f-4da7-87e8-305009a04dbe",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tHahggdTn9DVgris",
+          "name": "Google Drive account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ \"video_\" + $now.toFormat(\"yyyyLLdd_HHmmss\") + \".mp3\" }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {
+          "simplifyOutput": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        864,
+        -528
+      ],
+      "id": "e8174f6b-2ccc-4fd6-9e9f-7e1165daa9c1",
+      "name": "Upload file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tHahggdTn9DVgris",
+          "name": "Google Drive account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone",
+            "allowFileDiscovery": true
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1088,
+        -720
+      ],
+      "id": "aef43f89-df11-4aaf-ac6f-edeb492b2485",
+      "name": "Share file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tHahggdTn9DVgris",
+          "name": "Google Drive account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone",
+            "allowFileDiscovery": true
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1088,
+        -528
+      ],
+      "id": "4ea2966c-3719-43b7-a566-9de1ecdb614c",
+      "name": "Share file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tHahggdTn9DVgris",
+          "name": "Google Drive account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $('Upload file1').item.json.name }}",
+        "returnAll": true,
+        "filter": {},
+        "options": {
+          "fields": [
+            "*"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1312,
+        -528
+      ],
+      "id": "06703217-ad98-4f95-a0df-a5c54c8c2d17",
+      "name": "Search files and folders1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tHahggdTn9DVgris",
+          "name": "Google Drive account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1536,
+        -624
+      ],
+      "id": "95ceb8c2-4623-4cc7-81fc-3fa177536862",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2208,
+        -624
+      ],
+      "id": "3088f5aa-2cde-45cf-bfdf-2a8e9da1c42f",
+      "name": "Wait",
+      "webhookId": "83e9a43e-456e-49a6-ba03-475e78cff157"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "COMPLETED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "826e531e-749f-4ff5-82f6-532ff0713ca6"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a4bd3152-88e4-4433-9db3-c0da8666bafe",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "PROCESSING",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5cf726a9-2619-412f-a66b-954080756899",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "FAILED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a240a0cd-588b-4b4d-9585-185d825092c3",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "REJECTED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d21d3063-cef8-44e5-b312-9aa9b79e4766",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "PENDING",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        2656,
+        -672
+      ],
+      "id": "9bc6cc73-b333-4c93-a8ad-ba60324bc2d1",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $('Upload file').item.json.name }}",
+        "returnAll": true,
+        "filter": {},
+        "options": {
+          "fields": [
+            "*"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1312,
+        -720
+      ],
+      "id": "abf4e46f-615e-46b7-83af-75feccb5e0a9",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tHahggdTn9DVgris",
+          "name": "Google Drive account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const url = 'https://api.avatartalk.ai/inference';\nconst headers = {\n  'Authorization': 'Bearer   eDXPUHQeJZvdyz3RQELcH4CIjccPJeaK5DX-Gc-OUGU  ',\n  'Content-Type': 'application/json'\n};\nconst body = {\n  text: $input.first().json.body.news_text,\n  avatar: 'arab_man',\n  emotion: 'neutral',\n  language: 'ar'\n};\n\n// Step 1: Create the video request\nconst response = await this.helpers.request({\n  method: 'POST',\n  url,\n  headers,\n  body,\n  json: true,\n});\n\n// Step 2: Extract the mp4 URL\nconst mp4Url = response.mp4_url;\n\nif (!mp4Url) {\n  return [{ json: { error: 'mp4_url not found', response } }];\n}\n\n// Step 3: Download the video binary\nconst videoData = await this.helpers.request({\n  method: 'GET',\n  url: mp4Url,\n  encoding: null, // to get binary data\n});\n\n// Step 4: Return video as binary so next node can use it\nreturn [\n  {\n    json: {\n      message: 'Video generated successfully',\n      mp4_url: mp4Url,\n    },\n    binary: {\n      video: await this.helpers.prepareBinaryData(videoData, 'video.mp4'),\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        -720
+      ],
+      "id": "a6993613-f736-4e14-b998-adc8773cd5d8",
+      "name": "avatartalk.ai (text-video)"
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "voice": {
+          "__rl": true,
+          "value": "CYw3kZ02Hs0563khs1Fj",
+          "mode": "list",
+          "cachedResultName": "Dave"
+        },
+        "text": "={{ $json.body.news_text }}",
+        "additionalOptions": {
+          "outputFormat": "mp3_44100_128"
+        },
+        "requestOptions": {}
+      },
+      "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -528
+      ],
+      "id": "a319f14e-ebc6-462e-8e25-68cb2d40cc3b",
+      "name": "elevenlabs(text to speech)",
+      "credentials": {
+        "elevenLabsApi": {
+          "id": "KQrXZF6eC3jRwKNv",
+          "name": "ElevenLabs account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    video_url: $node[\"Search files and folders\"].json.webContentLink,\n    audio_url: $node[\"Search files and folders1\"].json.webContentLink\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        -624
+      ],
+      "id": "403b0b8d-2764-48c4-9995-ed6277213e43",
+      "name": "prepare lip-synch input"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.sync.so/v2/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "sk-NhDlR088Si-Rqiw4xxJjcQ.78vmyc5gUX5zEJIhmHE_obSXxuom8vjM"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"lipsync-2\",\n  \"input\": [\n    {\n      \"type\": \"video\",\n      \"url\": \"={{$item(0).$node['Search files and folders'].json.webContentLink}}\"\n    },\n    {\n      \"type\": \"audio\",\n      \"url\": \"={{$item(0).$node['Search files and folders1'].json.webContentLink}}\"\n    }\n  ],\n  \"outputFileName\": \"my_custom_output\"\n}\n",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 2,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1984,
+        -624
+      ],
+      "id": "35e4fd97-640e-45e1-8362-265a723cc4c1",
+      "name": "wave2lip post request",
+      "alwaysOutputData": false,
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "url": "=https://api.sync.so/v2/generate/{{ $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "sk-NhDlR088Si-Rqiw4xxJjcQ.78vmyc5gUX5zEJIhmHE_obSXxuom8vjM"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2432,
+        -704
+      ],
+      "id": "31879165-4abb-4b32-8ed5-fccabe4b40cc",
+      "name": "wave2lip get request"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "news-editor",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        704,
+        -1024
+      ],
+      "id": "0025aaf1-8580-458b-bfba-d793f91e2e6a",
+      "name": "Webhook",
+      "webhookId": "dfaedc71-984d-46dc-ba14-29d8ca2ec65f"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.policy }}",
+                    "rightValue": "najah_media",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2237ee6a-f573-42ae-8578-8cc3dc365178"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dbe7792d-3a4f-4ff8-b55a-4c8314d990df",
+                    "leftValue": "={{ $json.body.policy }}",
+                    "rightValue": "gaza_tv",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "11a382f6-8aa1-487f-972a-5275827ee0d6",
+                    "leftValue": "={{ $json.body.policy }}",
+                    "rightValue": "najah_news",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "allMatchingOutputs": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        928,
+        -1040
+      ],
+      "id": "16812df6-1156-490c-8ec4-f7b17209b35f",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "python",
+        "pythonCode": "prompts = [f\"\"\"أنت محرر يعمل في مركز الإعلام – جامعة النجاح الوطنية، وتلتزم بالسياسة التحريرية الخاصة بـ Najah Media.\nالمطلوب: إعادة صياغة النص المُدخل بأسلوب عربي فصيح، مهني، موضوعي، تحليلي وهادئ، مع الالتزام بالتعليمات التالية:\n\nالنص :  {_input.item.json.body.text}\nقواعد الكتابة :\n\nاستخدم العربية الفصحى الدقيقة والواضحة.\n\nالتزم بالحياد والموضوعية، واذكر جميع وجهات النظر بإنصاف.\n\nتجنّب المبالغة والصفات الانفعالية أو العاطفية.\n\nقدّم تحليلًا وسياقًا منطقيًا للأحداث دون تهويل.\n\nاجعل الخاتمة فكرية أو تحليلية هادئة.\n\nهيكل النص الإلزامي (بالعربية وبهذا الترتيب):\nالتصنيف: [المجال العام والفرعي للخبر، مثل: سياسي – محلي / اقتصادي – تنمية]\nالعنوان: [عنوان صحفي دقيق يلخص جوهر الحدث]\nالمقدمة: [فقرتان تمهيديتان تقدمان خلفية الحدث وفكرته الرئيسية]\nالتفاصيل: [ثلاث إلى أربع فقرات تسرد الوقائع بشكل متسلسل وتحليلي]\nالخاتمة: [فقرة قصيرة تتضمن خلاصة فكرية أو تحليلية هادئة]\n\nأخرج الناتج كنص عربي منسق وواضح بدون أي علامات أو رموز أو ترميز (HTML أو Markdown).\nيجب أن تبدأ الأسطر بالعناوين أعلاه (التصنيف، العنوان، المقدمة، التفاصيل، الخاتمة) بنفس الترتيب، ويتبع كل منها الفقرة الخاصة به.\"\"\"\n  \n  ,\n  \n  f\"\"\"أنت محرر يعمل وفق السياسة التحريرية لإذاعة وتلفزيون غزة، وتكتب نصًا وطنيًا وإنسانيًا يعكس روح الصمود الفلسطيني.\nالمطلوب: إعادة صياغة النص بأسلوب وطني، إنساني، متوازن، يعبر عن الهوية الفلسطينية، مع الالتزام بالتعليمات التالية:\n\nالنص :  {_input.item.json.body.text}\n\nقواعد الكتابة:\n\nاستخدم مصطلحات وطنية إلزامية مثل: الاحتلال الإسرائيلي، الأسرى، الشهداء، المقاومة الفلسطينية، القدس المحتلة.\n\nأبرز الجانب الإنساني في القصة: المعاناة، الكرامة، الأمل، الصمود.\n\nلا تستخدم مصطلحات الاحتلال مثل: \"الجيش الإسرائيلي\" أو \"قتيل\".\n\nاستخدم لغة فصيحة قريبة من الناس دون تهويل أو مبالغة.\n\nاجعل النص مؤثرًا ومتوازنًا، يعبر عن الكرامة والثبات الفلسطيني.\n\nهيكل النص الإلزامي (بهذا الترتيب):\nالتصنيف: [نوع الخبر، مثل: وطني – إنساني / سياسي – ميداني]\nالعنوان: [عنوان وطني وإنساني يعكس جوهر الحدث وروحه العامة]\nالمقدمة: [فقرتان تمهيديتان تبرزان البعد الوطني والإنساني للحدث]\nالتفاصيل: [ثلاث إلى أربع فقرات تصف الحدث، المعاناة، والصمود الفلسطيني]\nالخاتمة: [فقرة تلخص الموقف الوطني وتؤكد الثبات والأمل]\n\nأخرج الناتج كنص عربي منسق وواضح بدون أي ترميز أو تنسيق إضافي.\nاستخدم نفس العناوين بالعربية تمامًا (التصنيف، العنوان، المقدمة، التفاصيل، الخاتمة) وبالترتيب\"\"\"\n           \n           ,\n          \n          f\"\"\"أنت محرر يعمل في موقع النجاح الإخباري، وتلتزم بالسياسة التحريرية الخاصة بـ Najah News.\nالمطلوب: إعادة صياغة النص بأسلوب صحفي مهني مباشر وواضح، مع التركيز على التسلسل الزمني والدقة، وفق القواعد التالية:\n\nالنص :  {_input.item.json.body.text}\n\nقواعد الكتابة:\n\nاستخدم زمنًا خبريًا مناسبًا (المضارع أو الماضي القريب).\n\nاجعل العنوان قصيرًا ودقيقًا (10–12 كلمة كحد أقصى).\n\nاستخدم الفعل المعلوم وليس المجهول.\n\nالتزم بالمصطلحات الوطنية مثل: الاحتلال الإسرائيلي، الشهداء، الأسرى، القدس المحتلة.\n\nرتّب الفقرات زمنيًا من الأحدث إلى الأقدم.\n\nهيكل النص الإلزامي (بهذا الترتيب):\nالتصنيف: [نوع الخبر، مثل: سياسي – محلي / دولي – عاجل]\nالعنوان: [عنوان خبري مباشر وواضح يلخص الحدث الأساسي]\nالمقدمة: [فقرة قصيرة تضع القارئ في جو الحدث الرئيسي]\nالتفاصيل: [ثلاث إلى أربع فقرات تشرح الوقائع بدقة وتسلسل زمني]\nالخاتمة: [فقرة تلخص الموقف النهائي أو النتيجة]\n\nأخرج الناتج كنص عربي فصيح وواضح بدون رموز أو وسوم.\nاستخدم نفس العناوين بالعربية (التصنيف، العنوان، المقدمة، التفاصيل، الخاتمة) بالترتيب، يتبع كل عنوان فقرته.\"\"\" \n          ]\n\nif _input.first().json.body.policy == \"najah_media\":\n  return { \"prompt\" : prompts[0] }\nelif _input.first().json.body.policy == \"gaza_tv\":\n  return { \"prompt\" : prompts[1] }\nelif _input.first().json.body.policy == \"najah_news\":\n  return { \"prompt\" : prompts[2] }\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1152,
+        -1024
+      ],
+      "id": "9db5f5d6-3a3e-4665-84de-272f86cfe60d",
+      "name": "prompt generation"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node - JavaScript\n// Input: item.json.text (contains the labeled Arabic article)\n\nconst item = $input.first().json.content.parts[0]\nconst raw = (item.text ?? \"\").toString();\n\n// Convert literal \"\\n\" to real newlines\nlet s = raw.replace(/\\r/g, \"\");\nif (s.includes(\"\\\\n\")) s = s.replace(/\\\\n/g, \"\\n\");\n\n// Normalize blank lines\ns = s.replace(/\\n{3,}/g, \"\\n\\n\").trim();\n\n// Arabic section labels\nconst labels = [\"التصنيف\", \"العنوان\", \"المقدمة\", \"التفاصيل\", \"الخاتمة\", \"الكلمات_المفتاحية\"];\nconst labelPattern = labels.join(\"|\");\n\n// Helper function to capture each section\nfunction capture(label) {\n  const re = new RegExp(`${label}\\\\s*:\\\\s*([\\\\s\\\\S]*?)(?=\\\\n\\\\n(?:${labelPattern})\\\\s*:|$)`, \"m\");\n  const m = s.match(re);\n  return m ? m[1].trim() : \"\";\n}\n\nconst category   = capture(\"التصنيف\");\nconst title      = capture(\"العنوان\");\nconst intro      = capture(\"المقدمة\");\nconst details    = capture(\"التفاصيل\");\nconst conclusion = capture(\"الخاتمة\");\n\n// Build body paragraphs\nconst paragraphs = [intro, details, conclusion]\n  .map(p => p && p.replace(/\\s+/g, \" \").trim())\n  .filter(Boolean);\n\nconst body = paragraphs.join(\"\\n\\n\");\n\n// Combine title + body for full readable article\nconst news_text = [title, body].filter(Boolean).join(\"\\n\\n\").trim();\n\nlet formated_text={\n    json: {\n      category,\n      title,\n      body,\n      news_text,   // full text for ElevenLabs\n      clean_text: body\n    }\n  }\n// Return a single item with cleaned fields\nreturn formated_text;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        -1056
+      ],
+      "id": "9ce08d02-78e7-403e-b1d3-45177a3b2bca",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        -1024
+      ],
+      "id": "2889e98b-aa58-4f01-8d5c-610b0d9bf4c4",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "H7UkvcuuRxGBwdaO",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1872,
+        -1024
+      ],
+      "id": "e32725f1-5041-45e4-8d7d-4d1fddf45285",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"error\": true,\n  \"status\": \"{{ $json.status }}\",\n  \"message\": \"فشل في توليد الفيديو. حاول مرة أخرى لاحقاً\"\n}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2896,
+        -448
+      ],
+      "id": "2a27d129-08bb-4f24-be37-000a79dde604",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2880,
+        -624
+      ],
+      "id": "28186839-1de9-4e1c-9715-62c523bacb78",
+      "name": "completed Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Upload sources": {
+      "main": [
+        [
+          {
+            "node": "avatartalk.ai (text-video)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "elevenlabs(text to speech)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Share file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file1": {
+      "main": [
+        [
+          {
+            "node": "Share file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share file": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share file1": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "prepare lip-synch input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "wave2lip get request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "completed Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "avatartalk.ai (text-video)": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "elevenlabs(text to speech)": {
+      "main": [
+        [
+          {
+            "node": "Upload file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prepare lip-synch input": {
+      "main": [
+        [
+          {
+            "node": "wave2lip post request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wave2lip post request": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wave2lip get request": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "prompt generation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "prompt generation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "prompt generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prompt generation": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8fbadd96-92eb-4c34-abff-e0212bd62867",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4a35b29b77035ba309cb35acd078e3dded27cf4798e7e5f5bf6e55005a9de256"
+  },
+  "id": "imyavquSxGPBhkAa",
+  "tags": []
+}
